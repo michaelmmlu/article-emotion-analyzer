@@ -8,7 +8,7 @@ def scrape(site):
 
     soup = bs4.BeautifulSoup(res.text, "html.parser")
 
-    script = soup.findAll(['script', 'style', 'a'])
+    script = soup.findAll(['script', 'style', 'a', 'button', 'label', 'time'])
     for match in script:
         match.decompose()
     txt = ""
@@ -18,10 +18,11 @@ def scrape(site):
             txt += line + " "
         else:
             txt += line.encode('cp850', 'replace').decode('cp850') + " "
+    txt = ' '.join(txt.split())
     return txt
 
 if __name__ == '__main__':
-    text = scrape('https://www.theguardian.com/world/north-korea')
+    text = scrape('https://www.theguardian.com/world/2018/jan/19/frosty-reception-for-south-koreas-winter-olympics-detente-with-north')
 
     txtfile = open('list.txt', 'w')
     txtfile.write(text)
