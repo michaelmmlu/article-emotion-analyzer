@@ -1,7 +1,9 @@
 import requests
 import bs4
 import string
+import json
 from newspaper import Article
+from flask import Flask, redirect, request
 
 def prelim_scrape(url):
     res = requests.get(url)
@@ -65,8 +67,22 @@ def analyze(text):
                     j += 1
             i += 1
 
-    for type in sorted_entities:
-        for entity in type:
-            print(entity.name, types[entity.type], entity.salience, entity.sentiment.score, entity.sentiment.magnitude)
+    sorted_entities.append([sentiment.score, sentiment.magnitude])
 
-    print('Sentiment: {}, {}'.format(sentiment.score, sentiment.magnitude))
+    return sorted_entities
+
+    # for type in sorted_entities:
+    #     for entity in type:
+    #         print(entity.name, types[entity.type], entity.salience, entity.sentiment.score, entity.sentiment.magnitude)
+    #
+    # print('Sentiment: {}, {}'.format(sentiment.score, sentiment.magnitude))
+
+@app.route('/run_analysis', methods = ['POST'])
+def run_analysis():
+
+    client = language.LanguageServiceClient()
+
+    form_url = request.form['url']
+
+    text = scrape_analyze(form_url)
+    return json.dumps(analyze(text))
