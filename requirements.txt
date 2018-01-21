@@ -3,3 +3,4 @@ google-cloud-language==1.0.0
 gunicorn==19.7.1
 bs4==0.0.1
 newspaper3k==0.2.5
+Flask-Cors==3.0.3

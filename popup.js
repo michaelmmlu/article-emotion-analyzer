@@ -1,51 +1,52 @@
-function analyze() {
-  var url = "";
-  var score = getScore(url);
-  var outputStringTemp = "The Objectivity Score Of This Webpage is " + score; 
-  document.getElementById('outputString').innerHTML = outputStringTemp;
-  //display(score);
-}
+var activeTabId;
+var data;
 
-function getScore(url) {
-  return doQuery();
-}
+chrome.tabs.query({active: true, currentWindow: true}, function(arrayOfTabs) {
 
-/**
- * test method to output score as a popup box.
- * @param score 
- */
-function display(score) {
-  alert("" + score);
-}
+     // since only one tab should be active and in the current window at once
+     // the return variable should only have one entry
+     var activeTab = arrayOfTabs[0];
+     activeTabId = activeTab.url; // or do whatever you need
+  });
 
-function main() {
-  // init stuff
-}
-
-function clickHandler(e) {
-  analyze()
-  //setTimeout(analyze, 10);
-}
-
-function doQuery() {
-  $(function() {
-    $('button').click(function() {
-        $.ajax({
-            url: 'http://secret-heaven-192806.appspot.com/',
-            data: $('form').serialize(),
-            type: 'POST',
-            success: function(response) {
-                return response;
-            },
-            error: function(error) {
-                console.log(error);
-            }
-        });
+$(function() {
+  $('button').click(function() {
+    var link = activeTabId;
+    $.ajax({
+        url: 'http://127.0.0.1:8080/run_analysis',
+        data: {form_url: link},
+        type: 'POST',
+        success: function(response) {
+          data = JSON.parse(response);
+          populate_fields(data);
+        },
+        error: function(error) {
+          window.alert("ye1");
+        }
     });
+  });
 });
-}
 
-document.addEventListener('DOMContentLoaded', function () {
-  document.querySelector('button').addEventListener('click', clickHandler);
-  main();
-});
+function populate_fields(stringlist) {
+  var data = stringlist.split(',');
+
+  list = document.getElementById('list');
+  var entry = document.createElement('li');
+  entry.appendChild(document.createTextNode("bias level: " + data[0]));
+  list.appendChild(entry);
+  entry = document.createElement('li');
+  entry.appendChild(document.createTextNode("1. " + data[1] + ": " + data[2]));
+  list.appendChild(entry);
+  entry = document.createElement('li');
+  entry.appendChild(document.createTextNode("2. " + data[3] + ": " + data[4]));
+  list.appendChild(entry);
+  entry = document.createElement('li');
+  entry.appendChild(document.createTextNode("3. " + data[5] + ": " + data[6]));
+  list.appendChild(entry);
+  entry = document.createElement('li');
+  entry.appendChild(document.createTextNode("4. " + data[7] + ": " + data[8]));
+  list.appendChild(entry);
+  entry = document.createElement('li');
+  entry.appendChild(document.createTextNode("5. " + data[9] + ": " + data[10]));
+  list.appendChild(entry);
+}
