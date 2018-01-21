@@ -13,7 +13,7 @@ $(function() {
   $('button').click(function() {
     var link = activeTabId;
     $.ajax({
-        url: 'http://127.0.0.1:8080/run_analysis',
+        url: 'https://hackdavis2018-1516486944179.appspot.com/run_analysis',
         data: {form_url: link},
         type: 'POST',
         success: function(response) {
