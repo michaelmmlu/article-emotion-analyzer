@@ -1,9 +1,9 @@
 import requests
 import bs4
-import string
-import json
 from newspaper import Article
-from flask import Flask, redirect, request
+from flask import Flask, redirect, request, render_template
+
+app = Flask(__name__)
 
 def prelim_scrape(url):
     res = requests.get(url)
@@ -28,12 +28,12 @@ def scrape_analyze(url):
     return article.text
 
 def analyze(text):
-    from google.cloud import language
+    from google.cloud import language_v1
     from google.cloud.language import enums
     from google.cloud.language import types
 
     # Instantiates a client
-    client = language.LanguageServiceClient()
+    client = language_v1.LanguageServiceClient()
 
     # The text to analyze
     document = types.Document(
@@ -77,12 +77,19 @@ def analyze(text):
     #
     # print('Sentiment: {}, {}'.format(sentiment.score, sentiment.magnitude))
 
-@app.route('/run_analysis', methods = ['POST'])
-def run_analysis():
+@app.route('/')
+def homepage():
+    return render_template('popup.html')
 
-    client = language.LanguageServiceClient()
+@app.route('/run_analysis', methods = ['GET', 'POST'])
+def run_analysis():
 
     form_url = request.form['url']
 
     text = scrape_analyze(form_url)
-    return json.dumps(analyze(text))
+    return render_template('popup.html', sorted_entities = analyze(text))
+
+if __name__ == '__main__':
+    # This is used when running locally. Gunicorn is used to run the
+    # application on Google App Engine. See entrypoint in app.yaml.
+    app.run(host='127.0.0.1', port=8080, debug=True)

@@ -1,0 +1,5 @@
+Flask==0.12.2
+google-cloud-language==1.0.0
+gunicorn==19.7.1
+bs4==0.0.1
+newspaper3k==0.2.5

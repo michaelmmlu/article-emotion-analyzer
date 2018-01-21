@@ -30,17 +30,9 @@ def get_min_max(text):
         content=text,
         type=enums.Document.Type.PLAIN_TEXT)
 
-    entities = client.analyze_entity_sentiment(document)
+    sentiment = client.analyze_sentiment(document).document_sentiment
 
-    max_mag, min_mag = 0, 0
-
-    for entity in entities:
-        if entity.sentiment.magnitude > max_mag:
-            max_mag = entity.sentiment.magnitude
-        elif entity.sentiment.magnitude < min_mag:
-            min_mag = entity.sentiment.magnitude
-
-    return min_mag, max_mag, len(text)
+    return sentiment.magnitude, len(text)
 
 urls = ['http://www.cnn.com/', 'http://www.nytimes.com/', 'http://www.thehill.com/', 'http://www.foxnews.com/', 'https://www.usatoday.com/']
 
@@ -48,8 +40,8 @@ full_urls = []
 
 data = []
 
-for url in urls:
-    temp = newspaper.build(url)
+for link in urls:
+    temp = newspaper.build(link, memoize_articles = False)
     i = 0
     for full_url in temp.articles:
         if i == 20:
@@ -57,12 +49,10 @@ for url in urls:
         full_urls.append(full_url.url)
         i += 1
 
-print(full_urls)
+for url in full_urls:
+    text = prelim_scrape(url)
+    data.append(get_min_max(text))
 
-# for url in full_urls:
-#     text = prelim_scrape(url)
-#     data.append(get_min_max(text))
-#
-# txtfile = open("data.txt", "w")
-# for dpoint in data:
-#     txtfile.write(dpoint + '\n')
+txtfile = open("data.txt", "w")
+for dpoint in data:
+    txtfile.write(dpoint + '\n')

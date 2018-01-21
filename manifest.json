@@ -2,7 +2,7 @@
     "manifest_version": 2,
 
     "name": "Objectivity Check",
-    "description": "extension that notifies the user if the website is overly emotional to determined whether or not a website is risky for research",
+    "description": "extension that notifies the user if the website is overly emotional to determined whethr or not a website is risky for research",
     "version": "1.0",
 
     "browser_action": {
