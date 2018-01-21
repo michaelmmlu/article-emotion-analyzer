@@ -21,7 +21,7 @@ $(function() {
           populate_fields(data);
         },
         error: function(error) {
-          window.alert("ye1");
+          window.alert("Error");
         }
     });
   });
