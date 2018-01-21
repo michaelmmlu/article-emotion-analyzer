@@ -7,7 +7,7 @@ function analyze() {
 }
 
 function getScore(url) {
-  return 1;
+  return doQuery();
 }
 
 /**
@@ -25,6 +25,24 @@ function main() {
 function clickHandler(e) {
   analyze()
   //setTimeout(analyze, 10);
+}
+
+function doQuery() {
+  $(function() {
+    $('button').click(function() {
+        $.ajax({
+            url: 'http://secret-heaven-192806.appspot.com/',
+            data: $('form').serialize(),
+            type: 'POST',
+            success: function(response) {
+                return response;
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+    });
+});
 }
 
 document.addEventListener('DOMContentLoaded', function () {
